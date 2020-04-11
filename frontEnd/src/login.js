@@ -1,11 +1,9 @@
 import React,{ setState } from 'react';
 import {View, Text, TextInput, Button} from 'react-native';
-// import {createBrowserHistory} from 'history'
+import { createStackNavigator } from '@react-navigation/stack';
 import axios from 'axios';
 // import '../css/style.css'
 
-// const history = createBrowserHistory()
- 
 class Login extends React.Component{
     constructor(props){
         super(props);
@@ -13,50 +11,52 @@ class Login extends React.Component{
             users: [],
             username: '',
             password: '',
-            showNotice: 'none'
+            warningStatus:false,
+            userUnavailable: false,
         };
         this.login = this.login.bind(this);
-        // this.handleClickBtn = this.handleClickBtn.bind(this);
+        this.gotoRegister = this.gotoRegister.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
-  // const [value, onChangeText] = useState('Username');
-
-//     componentDidMount() {
-//         axios.get("http://localhost:5001/active_status").then(res => {
-//             if(res.data.data.active_status){
-//               history.push("/event");
-//               history.go();
-//             }
-//         }).catch(err => {
-//             console.log(err);
-//         });
-//       }
-
   login(event) {
-      console.log("here")
-      event.preventDefault();
-      const data = {
-          'username': this.state.username,
-          'password': this.state.password,
-      };
-      console.log(data)
-      axios.post("http://10.0.2.2:5001/login",data).then(res => {
-          if(res.data.status==='login success'){
-            // history.push("/event");
-            // history.go();
-          }else{
-            this.setState({showNotice:"inline"})
-          }
-      }).catch(err => {
-          console.log(err);
-      });
+      let usernameFilled = false;
+      let passwordFilled = false;
+      if(this.state.username===""){
+        usernameFilled=false;
+      }else{
+        usernameFilled=true;
+      }
+      if(this.state.password===""){
+        passwordFilled=false;
+      }else{
+        passwordFilled=true;
+      }
+
+      if (usernameFilled && passwordFilled) {
+        event.preventDefault();
+        const data = {
+            'username': this.state.username,
+            'password': this.state.password,
+        };
+        axios.post("http://10.0.2.2:5001/login",data).then(res => {
+          console.log(res.data)
+            if(res.data.status==='login success'){
+              this.props.navigation.navigate('Event')
+            }else{
+              this.setState(() => ({ 'userUnavailable': true }));
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+    }else{
+      this.setState(() => ({ 'warningStatus': true }));
+    }
   };
 
-//     handleClickBtn() {
-//         history.push("/register");
-//         history.go();
-//    }
+    gotoRegister() {
+        this.props.navigation.navigate('Register')
+   }
 
     handleChange(name, value) {
       this.setState(() => ({ [name]: value }));
@@ -71,6 +71,11 @@ class Login extends React.Component{
               placeholder="username"
               onChangeText={(txt) => this.handleChange("username", txt)}
             />
+            {!!this.state.nameError && (
+              <Text style={{color: 'red'}}>
+                {this.state.nameError}
+              </Text>
+            )}
             <TextInput
               secureTextEntry={true} 
               value={this.state.password}
@@ -78,42 +83,19 @@ class Login extends React.Component{
               placeholder="password"
               onChangeText={(txt) => this.handleChange("password", txt)}
             />
-            <Button title="submit" onPress={this.login}/>
+            {
+              this.state.warningStatus && (
+                <Text style={{ color:"red"}}>Please fill in all fields</Text>
+            )}
+            {
+              this.state.userUnavailable && (
+                <Text style={{ color:"red"}}>Cannot find user. Please try again or register</Text>
+            )}
+            <Button title="Submit" onPress={this.login}/>
+            <Button title="Register" onPress={this.gotoRegister}/>
           </View>
       );
-//         return (
-//           <div class="login">
-//             <h1 class="title">Login</h1>
-//             <form onSubmit={this.login}>
-//               <div className="form-group">
-//                 <input
-//                   class="register-textinput"
-//                   type="text" name="username"
-//                   placeholder="Enter your username"
-//                   required
-//                   onChange={this.handleChange}
-//                 />
-//               </div>
-//               <div className="form-group">
-//                 <input
-//                   class="register-textinput"
-//                   name="password"
-//                   type="password"
-//                   placeholder="Enter your password"
-//                   required
-//                   onChange={this.handleChange}
-//                 />
-//               </div>
-//                 <button type="submit" class="button">Submit</button>
-//                 <div>
-//                   <a onClick={this.handleClickBtn}>Don't have account? Register Here</a>
-//                 </div>
-//             </form>
-//                   <h4 style={{display:this.state.showNotice}}>Cannot find user. Please try again or register</h4>
-//           </div>
-//         );
-    // }
-}
+    }
 }
  
 export default Login;

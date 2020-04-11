@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {View, Text, TextInput, Button} from 'react-native';
 // import {createBrowserHistory} from 'history'
 // import axios from 'axios';
 // import Logout from './components/logout.js'
