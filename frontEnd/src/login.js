@@ -42,7 +42,7 @@ class Login extends React.Component{
         axios.post("http://10.0.2.2:5001/login",data).then(res => {
           console.log(res.data)
             if(res.data.status==='login success'){
-              this.props.navigation.navigate('Event')
+              this.props.navigation.navigate('Tab')
             }else{
               this.setState(() => ({ 'userUnavailable': true }));
             }

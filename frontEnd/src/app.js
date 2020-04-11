@@ -2,16 +2,24 @@ import React from 'react';
 import Login from './login';
 import Register from './register';
 import Event from './event';
+import Participation from './participation';
+import Creation from './creation';
+import Logout from './logout';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import { View, Text, Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-function DetailsScreen() {
+const Tab = createBottomTabNavigator();
+
+function TabNavigator() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-    </View>
+      <Tab.Navigator>
+        <Tab.Screen name="Event" component={Event} />
+        <Tab.Screen name="Participation" component={Participation} />
+        <Tab.Screen name="Creation" component={Creation} />
+        <Tab.Screen name="Logout" component={Logout} />
+      </Tab.Navigator>
   );
 }
 
@@ -23,7 +31,7 @@ function App() {
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Event" component={Event} options={{headerShown:false}}/>
+        <Stack.Screen name="Tab" component={TabNavigator} options={{headerShown:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
