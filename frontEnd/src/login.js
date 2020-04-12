@@ -6,6 +6,7 @@ import axios from 'axios';
 
 class Login extends React.Component{
     constructor(props){
+        console.log("login===")
         super(props);
         this.state = {
             users: [],
@@ -43,6 +44,7 @@ class Login extends React.Component{
           console.log(res.data)
             if(res.data.status==='login success'){
               this.props.navigation.navigate('Tab')
+              this.setState({username: '', password: '',})
             }else{
               this.setState(() => ({ 'userUnavailable': true }));
             }
@@ -56,6 +58,7 @@ class Login extends React.Component{
 
     gotoRegister() {
         this.props.navigation.navigate('Register')
+        this.setState({username: '', password: '',})
    }
 
     handleChange(name, value) {
@@ -65,6 +68,7 @@ class Login extends React.Component{
     render(){
       return (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text>Login</Text>
             <TextInput
               value={this.state.username}
               name="username"
@@ -83,15 +87,13 @@ class Login extends React.Component{
               placeholder="password"
               onChangeText={(txt) => this.handleChange("password", txt)}
             />
-            {
-              this.state.warningStatus && (
+            {this.state.warningStatus && (
                 <Text style={{ color:"red"}}>Please fill in all fields</Text>
             )}
-            {
-              this.state.userUnavailable && (
-                <Text style={{ color:"red"}}>Cannot find user. Please try again or register</Text>
+            {this.state.userUnavailable && (
+                <Text style={{ color:"red"}}>Check your username or password</Text>
             )}
-            <Button title="Submit" onPress={this.login}/>
+            <Button title="Login" onPress={this.login}/>
             <Button title="Register" onPress={this.gotoRegister}/>
           </View>
       );

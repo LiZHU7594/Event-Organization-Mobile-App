@@ -15,30 +15,27 @@ class Register extends Component{
             showTryAgain:false
         };
         this.register = this.register.bind(this);
+        this.gotoLogin = this.gotoLogin.bind(this);
         this.handleChange = this.handleChange.bind(this);
     };
 
-    register(event) {
-        let usernameFilled = false;
-        let emailFilled = false;
-        let passwordFilled = false;
-        if(this.state.username===""){
-          usernameFilled=false;
-        }else{
-          usernameFilled=true;
-        };
-        if(this.state.emailname===""){
-          emailFilled=false;
-        }else{
-          emailFilled=true;
-        };
-        if(this.state.password===""){
-          passwordFilled=false;
-        }else{
-          passwordFilled=true;
-        };
+    gotoLogin() {
+        this.props.navigation.navigate('Login');
+    }
 
-        if (usernameFilled && emailFilled && passwordFilled) {
+    register(event) {
+        let allFilled = true;
+        if(this.state.username===""){
+          allFilled=false;
+        }
+        if(this.state.emailname===""){
+          allFilled=false;
+        }
+        if(this.state.password===""){
+          allFilled=false;
+        }
+
+        if (allFilled) {
         event.preventDefault();
         const data = {
             'username': this.state.username,
@@ -79,6 +76,7 @@ class Register extends Component{
     render(){
       return(
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text>Register</Text>
           <TextInput
             value={this.state.username}
             name="username"
@@ -110,49 +108,10 @@ class Register extends Component{
               this.state.showSuccess && (
                 <Text>Register success. Now redirect to event page</Text>
             )}
-          <Button title="Submit" onPress={this.register}/>
+          <Button title="Register" onPress={this.register}/>
+          <Text onPress={this.gotoLogin}>Already hava account? Login here</Text>
         </View>
         )
-        // return (
-        //   <div class='register'>
-        //     <h1 class="title">Register</h1>
-        //     <form onSubmit={this.register}>
-        //         <div className="form-group">
-        //             <input class="login-textinput"
-        //               type="text" name="username"
-        //               placeholder="Enter a username"
-        //               required
-        //               onChange={this.handleChange}
-        //             />
-        //         </div>
-        //         <div className="form-group">
-        //             <input class="login-textinput"
-        //               name="email"
-        //               type="email"
-        //               placeholder="Enter an email address"
-        //               required
-        //               onChange={this.handleChange}
-        //             />
-        //         </div>
-        //         <div className="form-group">
-        //             <input class="login-textinput"
-        //               name="password"
-        //               type="password"
-        //               placeholder="Enter a password"
-        //               required
-        //               onChange={this.handleChange}
-        //             />
-        //         </div>
-        //         <button type="submit" class="button">Submit</button>
-        //         <div style={{display:this.state.showNotice}}>
-        //             <h4>Register success. Now redirect to event page</h4>
-        //         </div>
-        //         <div style={{display:this.state.showTryAgain}}>
-        //             <h4>Repeated name. Please Try again.</h4>
-        //         </div>
-        // </form>
-        // </div>
-        // )
     };
 }
 
