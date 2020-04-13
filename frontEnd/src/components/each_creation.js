@@ -125,43 +125,53 @@ class EachCreation extends Component{
 
   render(){
     return (
-            <View>
-              <Text>{this.state.name}</Text>
-              <Text>{this.state.place}</Text>
-              <Text>{this.state.time}</Text>
+            <View style={{ margin: 10 }}>
+              <Text style={{fontSize:25,fontWeight: 'bold'}}>{this.state.name}</Text>
+              <Text style={{fontSize:20}}>{this.state.place}</Text>
+              <Text style={{fontSize:20}}>{this.state.time}</Text>
               {this.state.expireDisplay && (
-                <Text style={{ color:"red"}}>Expired</Text>
+                <Text style={{fontSize:20, color:"red"}}>Expired</Text>
               )}
-              <Text>{this.state.category}</Text>
+              <Text style={{fontSize:20}}>{this.state.category}</Text>
               {this.state.lessVisible && (
-                <Text>{this.state.detail}</Text>
+                <Text style={{fontSize:20, color:'blue'}}>{this.state.detail}</Text>
               )}
               {this.state.moreVisible &&(
+            <View style={{marginTop:5}}>
                 <Button title="More" onPress={this.handleMore}/>
+            </View>
               )}
               {this.state.lessVisible &&(
+            <View style={{marginTop:5}}>
                 <Button title="Less" onPress={this.handleLess}/>
+            </View>
               )}
               <View>
                 {this.state.participatorVisible && (
+            <View style={{marginTop:5}}>
                     <Button title="See Participator" onPress={this.handleSee}/>
+            </View>
                 )}
                 {this.state.closeVisible && (
                   <View>
-                  <Text>Participators:</Text>
+                  <Text style={{fontSize:20}}>Participators:</Text>
                     {
                       this.state.participators.map((participator) =>
-                        <Text>{participator.name} </Text>
+                        <Text style={{fontSize:20}}>{participator.name} </Text>
                       )
                     }
                   </View>
                 )}
               </View>  
               {this.state.closeVisible && (
+            <View style={{marginTop:5}}>
                   <Button title="Close Participators" onPress={this.handleClose}/>
+            </View>
               )}
               {this.state.operatorDisplay && (
+            <View style={{marginTop:5}}>
                   <Button title={this.state.operator} onPress={this.handleClickOperator}/>
+            </View>
               )}   
             </View>
     )

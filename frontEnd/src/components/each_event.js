@@ -95,7 +95,7 @@ class EachEvent extends Component{
         'event_id': this.state.id
       };
 
-      axios.post("http://localhost:5001/join",data).then(res => {
+      axios.post("http://10.0.2.2:5001/join",data).then(res => {
           this.setState({participatorNum:res.data.data.length})
       }).catch(err => {
           console.log(err);
@@ -118,24 +118,30 @@ class EachEvent extends Component{
 
   render(){
     return (
-          <View>
+          <View style={{ margin: 10 }}>
             {this.state.componentVisible &&(
               <View>
-              <Text>{this.state.name}</Text>
-              <Text>{this.state.place}</Text>
-              <Text>{this.state.time}</Text>
-              <Text>{this.state.category}</Text>
-              <Text>Number of Participators: {this.state.participatorNum}</Text>
+              <Text style={{fontSize:25,fontWeight: 'bold'}}>{this.state.name}</Text>
+              <Text style={{fontSize:20}}>{this.state.place}</Text>
+              <Text style={{fontSize:20}}>{this.state.time}</Text>
+              <Text style={{fontSize:20}}>{this.state.category}</Text>
+              <Text style={{fontSize:20}}>Number of Participators: {this.state.participatorNum}</Text>
               {this.state.lessVisible &&(
-                <Text>{this.state.detail}</Text>
+                <Text style={{fontSize:20, color:'blue'}}>{this.state.detail}</Text>
               )}
               {this.state.moreVisible &&(
+            <View style={{marginTop:5}}>
                 <Button title="More" onPress={this.handleMore}/>
+            </View>
               )}
               {this.state.lessVisible &&(
+            <View style={{marginTop:5}}>
                 <Button title="Less" onPress={this.handleLess}/>
+            </View>
               )}
+            <View style={{marginTop:5}}>
               <Button title={this.state.joinStatus} onPress={this.handleClickJoin}/>
+            </View>
               </View>
             )}
           </View>

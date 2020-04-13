@@ -6,7 +6,6 @@ import axios from 'axios';
 
 class Login extends React.Component{
     constructor(props){
-        console.log("login===")
         super(props);
         this.state = {
             users: [],
@@ -41,9 +40,8 @@ class Login extends React.Component{
             'password': this.state.password,
         };
         axios.post("http://10.0.2.2:5001/login",data).then(res => {
-          console.log(res.data)
             if(res.data.status==='login success'){
-              this.props.navigation.navigate('Tab')
+              this.props.navigation.navigate('Event')
               this.setState({username: '', password: '',})
             }else{
               this.setState(() => ({ 'userUnavailable': true }));
@@ -68,8 +66,9 @@ class Login extends React.Component{
     render(){
       return (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text>Login</Text>
+          <Text style={{fontSize:35,fontWeight: 'bold'}}>Login</Text>
             <TextInput
+              style={{backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 120}}
               value={this.state.username}
               name="username"
               placeholder="username"
@@ -81,6 +80,7 @@ class Login extends React.Component{
               </Text>
             )}
             <TextInput
+              style={{backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 120}}
               secureTextEntry={true} 
               value={this.state.password}
               name="password"
@@ -93,8 +93,12 @@ class Login extends React.Component{
             {this.state.userUnavailable && (
                 <Text style={{ color:"red"}}>Check your username or password</Text>
             )}
-            <Button title="Login" onPress={this.login}/>
-            <Button title="Register" onPress={this.gotoRegister}/>
+            <View style={{marginTop:5}}>
+              <Button title="Login" onPress={this.login}/>
+            </View>
+            <View style={{marginTop:5}}>
+              <Button title="Register" onPress={this.gotoRegister}/>
+            </View>
           </View>
       );
     }

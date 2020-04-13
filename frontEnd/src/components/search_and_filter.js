@@ -44,22 +44,40 @@ class SearchAndFliter extends Component{
 
   render(){
     return (
-      <View>
-        <TextInput placeholder="Keyword" name='keyword' onChangeText={(txt) => this.handleChange("keyword", txt)}/> 
-        <DatePicker placeholder="From" name='from' format="YYYY-MM-DD" onChangeText={(txt) => this.handleChange("from", txt)}/>
-        <DatePicker placeholder="To" name='to' format="YYYY-MM-DD" onChangeText={(txt) => this.handleChange("to", txt)}/>
+      <View style={{flex:1, flexDirection:'column', alignItems:'flex-end',marginBottom:10}}>
+      <View style={{flexDirection:'row'}}>
+        <TextInput 
+          style={{marginLeft:10,backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 180, height: 40}}
+          placeholder="Keyword" name='keyword' onChangeText={(txt) => this.handleChange("keyword", txt)}/> 
+        <TextInput 
+          style={{marginLeft:10,marginRight:10,backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 180, height: 40}}
+          placeholder="Place" name='place' onChangeText={(txt) => this.handleChange("place", txt)}/> 
+        </View>
         <RNPickerSelect
+          style={{marginLeft:10,marginTop: 5, width: 120, height: 40}}
+            placeholder={{
+                label: 'Select a category',
+                value: null,
+            }}
             onValueChange={(value) => this.handleChange("category", value)}
             items={[
-                { label: '', value: '' },
                 { label: 'Eat', value: 'eat' },
                 { label: 'Leetcode', value: 'leetcode' },
                 { label: 'Game', value: 'game' },
                 { label: 'Other', value: 'other' },
             ]}
         />
-        <TextInput placeholder="Place" name='place' onChangeText={(txt) => this.handleChange("place", txt)}/> 
-        <Button title="Search" onPress={this.searchAndFilter}/>
+      <View style={{flexDirection:'row',marginRight:10}}>
+        <DatePicker 
+          style={{marginLeft:10,marginTop: 5, width: 150, height: 40}}
+          placeholder="From" name='from' format="YYYY-MM-DD" onChangeText={(txt) => this.handleChange("from", txt)}/>
+        <DatePicker 
+          style={{marginLeft:10,marginTop: 5, width: 150, height: 40}}
+          placeholder="To" name='to' format="YYYY-MM-DD" onChangeText={(txt) => this.handleChange("to", txt)}/>
+        <Button 
+          style={{marginLeft:10, height: 20}}
+          title="Search" onPress={this.searchAndFilter}/>
+        </View>
       </View>
   		)
   }

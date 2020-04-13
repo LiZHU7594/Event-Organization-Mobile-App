@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import {ScrollView, Text, TextInput, Button} from 'react-native';
+import {ScrollView, Text, TextInput, Button, View} from 'react-native';
 import axios from 'axios';
 import SearchAndFliter from './components/search_and_filter.js'
 import ShowParticipation from './components/show_participations.js'
 import ShowUnavailableParticipation from './components/show_unavailable_participation.js'
 
 class Participation extends Component{
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       eventList: [],
       eventListUnavailable: [],
@@ -18,6 +18,8 @@ class Participation extends Component{
       page: 'participation',
     };
     this.handleClick = this.handleClick.bind(this)
+    this.gotoEvent = this.gotoEvent.bind(this)
+    this.gotoCreation = this.gotoCreation.bind(this)
   };
 
   componentDidMount(){
@@ -95,12 +97,30 @@ class Participation extends Component{
 
   }
 
+  gotoEvent(){
+    this.props.navigation.navigate('Event')
+  }
+
+  gotoCreation(){
+    this.props.navigation.navigate('Creation')
+  }
+
   render(){
   	return (
   		<ScrollView>
         <SearchAndFliter handleEventSearch={this.handleSearch.bind(this)} page={this.state.page}/>
-  			<Text>Here is your participation page</Text>
-  			<Text>{this.state.eventSentence}</Text>
+  			<Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>Your participations</Text>
+        <View style={{flexDirection:'row',marginLeft:10, marginBottom: 5,marginRight:10}}>
+          <View style={{marginLeft:50}}>
+            <Button 
+              title="gotoEvent" onPress={this.gotoEvent} />
+          </View>
+          <View style={{marginLeft:10}}>
+            <Button 
+              title="gotoCreation" onPress={this.gotoCreation} />
+          </View>
+        </View>
+  			<Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>{this.state.eventSentence}</Text>
         <ShowParticipation eventList={this.state.eventList} refresh={this.refresh.bind(this)}/>
         <ShowUnavailableParticipation eventList={this.state.eventListUnavailable}/>
   		</ScrollView>

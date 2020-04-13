@@ -17,8 +17,8 @@ class EachParticipation extends Component{
         joinStatus:"",
         moreVisible:true,
         lessVisible:false,
-        joinStatusDisplay:"",
-        expireDisplay:"",
+        joinStatusDisplay:false,
+        expireDisplay:false,
         participatorNum:""
     };
     this.handleMore=this.handleMore.bind(this);
@@ -99,7 +99,7 @@ class EachParticipation extends Component{
         'event_id': this.state.id
       };
 
-      axios.post("http://localhost:5001/join",data).then(res => {
+      axios.post("http://10.0.2.2:5001:5001/join",data).then(res => {
       }).catch(err => {
           console.log(err);
       });
@@ -110,7 +110,7 @@ class EachParticipation extends Component{
         'event_id': this.state.id
       };
 
-      axios.post("http://localhost:5001/quit",data).then(res => {
+      axios.post("http://10.0.2.2:5001:5001/quit",data).then(res => {
           this.props.refresh();
       }).catch(err => {
           console.log(err);
@@ -121,27 +121,36 @@ class EachParticipation extends Component{
 
   render(){
     return (
-            <View>
-              <Text>{this.state.name}</Text>
-              <Text>{this.state.place}</Text>
-              <Text>{this.state.time}</Text>
+            <View style={{ margin: 10 }}>
+              <Text style={{fontSize:25,fontWeight: 'bold'}}>{this.state.name}</Text>
+              <Text style={{fontSize:20}}>{this.state.place}</Text>
+              <Text style={{fontSize:20}}>{this.state.time}</Text>
               {this.state.expireDisplay && (
                 <Text style={{color:"red"}}>Expired</Text>
               )}
-              <Text>{this.state.category}</Text>
-              <Text>Number of Participators: {this.state.participatorNum}</Text>
+              <Text style={{fontSize:20}}>{this.state.category}</Text>
+              <Text style={{fontSize:20}}>Number of Participators: {this.state.participatorNum}</Text>
               {this.state.lessVisible && (
-                <Text>{this.state.detail}</Text>
+            <View style={{marginTop:5,fontSize:20}}>
+                <Text style={{fontSize:20, color:'blue'}}>{this.state.detail}</Text>
+            </View>
               )}
               {this.state.moreVisible &&(
+            <View style={{marginTop:5}}>
                 <Button title="More" onPress={this.handleMore}/>
+            </View>
               )}
               {this.state.lessVisible &&(
+            <View style={{marginTop:5}}>
                 <Button title="Less" onPress={this.handleLess}/>
+            </View>
               )}
               {this.state.joinStatusDisplay &&(
+            <View style={{marginTop:5}}>
                 <Button title={this.state.joinStatus} onPress={this.handleClickJoin}/>
+            </View>
               )}
+              
             </View>
     )
   }

@@ -76,20 +76,23 @@ class Register extends Component{
     render(){
       return(
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text>Register</Text>
+          <Text style={{fontSize:35,fontWeight: 'bold',}}>Register</Text>
           <TextInput
+            style={{backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 120}}
             value={this.state.username}
             name="username"
             placeholder="username"
             onChangeText={(txt) => this.handleChange("username", txt)}
           />
           <TextInput
+            style={{backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 120}}
             value={this.state.email}
             name="email"
             placeholder="email"
             onChangeText={(txt) => this.handleChange("email", txt)}
           />
           <TextInput
+            style={{backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 120}}
             secureTextEntry={true} 
             value={this.state.password}
             name="password"
@@ -108,8 +111,10 @@ class Register extends Component{
               this.state.showSuccess && (
                 <Text>Register success. Now redirect to event page</Text>
             )}
-          <Button title="Register" onPress={this.register}/>
-          <Text onPress={this.gotoLogin}>Already hava account? Login here</Text>
+            <View style={{marginTop:5}}>
+              <Button title="Register" onPress={this.register}/>
+            </View>
+          <Text onPress={this.gotoLogin}>Already hava account? Click here to login</Text>
         </View>
         )
     };

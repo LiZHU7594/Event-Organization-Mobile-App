@@ -87,10 +87,15 @@ class CreateEvent extends Component{
 
   render(){
     return (
-      this.state.visible && <View>
-        <TextInput placeholder="Name" name='name' onChangeText={(txt) => this.handleChange("name", txt)}/>
-        <TextInput placeholder="Place" name='place' onChangeText={(txt) => this.handleChange("place", txt)}/>
-        <DatePicker placeholder="Time" name='time' format="YYYY-MM-DD HH:mm" onChangeText={(txt) => this.handleChange("time", txt)}/>
+      this.state.visible && <View style={{flex:1, flexDirection:'column', alignItems:'flex-end',marginBottom:10}}>
+      <View style={{flexDirection:'row',marginRight:10}}>
+        <TextInput 
+          style={{backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 105, height: 40}}
+          placeholder="Name" name='name' onChangeText={(txt) => this.handleChange("name", txt)}/>
+        <TextInput 
+          style={{marginLeft:10,marginRight:10,backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, width: 105, height: 40}}
+          placeholder="Place" name='place' onChangeText={(txt) => this.handleChange("place", txt)}/>
+      </View>
         <RNPickerSelect
             onValueChange={(value) => this.handleChange("category", value)}
             items={[
@@ -100,15 +105,22 @@ class CreateEvent extends Component{
                 { label: 'Other', value: 'other' },
             ]}
         />
-          <TextInput placeholder="Detail" name='detail' onChangeText={(txt) => this.handleChange("detail", txt)}/>
+        <DatePicker placeholder="Time" name='time' format="YYYY-MM-DD HH:mm" onChangeText={(txt) => this.handleChange("time", txt)}/>
+          <TextInput 
+            style={{backgroundColor:'#d6d6d6',borderRadius: 5,marginTop: 5, marginRight:10, width: 370, height: 40}}
+            placeholder="Detail" name='detail' onChangeText={(txt) => this.handleChange("detail", txt)}/>
           {this.state.showFill && (
             <Text style={{ color:"red"}}>Please fill in all fields</Text>
             )}
           {this.state.showNotice && (
             <Text style={{ color:"red"}}>Repeated Name.Please try again</Text>
           )}
-          <Button title="Cancle" onPress={this.handleCancel}/>
-          <Button title="Submit" onPress={this.createEventFunc}/>
+      <View style={{flexDirection:'row',marginTop:10, marginRight:120}}>
+          <View style={{marginRight:10}}>
+            <Button title="Cancel" onPress={this.handleCancel}/>
+          </View>
+          <Button title="Create" onPress={this.createEventFunc}/>
+        </View>
       </View>
   		)
   }

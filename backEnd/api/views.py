@@ -106,6 +106,7 @@ def events():
 @users_blueprint.route('/search_and_filter', methods=['POST'])
 def event_search_and_filter():
     data = request.json
+    now_time = datetime.now()
     keyword = None
     time_from = None
     time_to = None
@@ -123,7 +124,7 @@ def event_search_and_filter():
     if data["place"]:
         place = data["place"]
     if(page=="participation"):
-        event_list = search_and_filter(keyword, time_from, time_to, place, category, page)
+        event_list = search_and_filter(keyword, time_from, time_to, place, category, page, now_time)
         unavailable_event_list = search_and_filter_unavailable_participation(keyword, time_from, time_to, place, category)
         response_object = {
             'data':{
@@ -135,7 +136,7 @@ def event_search_and_filter():
         }
         code = 200
     else:
-        event_list = search_and_filter(keyword, time_from, time_to, place, category, page)
+        event_list = search_and_filter(keyword, time_from, time_to, place, category, page, now_time)
         response_object = {
             'data':{
                 'event_list': event_list,

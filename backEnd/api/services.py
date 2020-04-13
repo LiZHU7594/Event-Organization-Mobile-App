@@ -90,7 +90,7 @@ def create_event(place, name, time, category, creator_id, detail, page, now_time
     else:
         return None
 
-def search_and_filter(keyword, time_from, time_to, place, category, page):
+def search_and_filter(keyword, time_from, time_to, place, category, page, now_time):
     events = Event.query.all()
     if keyword:
         events = Event.query.filter(or_(Event.name.contains(keyword), Event.detail.contains(keyword))).order_by(Event.time)
@@ -107,8 +107,10 @@ def search_and_filter(keyword, time_from, time_to, place, category, page):
         events_place = Event.query.filter_by(place=place).order_by(Event.time)
         events = list(set(events).intersection(set(events_place)))
     if page == 'event':
-        events_in_event_page = Event.query.filter_by(is_active=True).order_by(Event.time)
-        events = list(set(events).intersection(set(events_in_event_page)))
+        unexpired_events = Event.query.filter(Event.time >= now_time).order_by(Event.time)
+        events = list(set(events).intersection(set(unexpired_events)))
+        active_events = Event.query.filter_by(is_active=True).order_by(Event.time)
+        events = list(set(events).intersection(set(active_events)))
     if page == 'participation':
         active_user_id = check_active_user_id()
         active_events = Event.query.filter_by(is_active=True).order_by(Event.time)
