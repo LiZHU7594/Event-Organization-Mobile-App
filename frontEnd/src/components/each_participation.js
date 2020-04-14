@@ -103,7 +103,6 @@ class EachParticipation extends Component{
       const data = {
         'event_id': this.state.id
       };
-      console.log(data)
       axios.post("http://10.0.2.2:5001/join",data).then(res => {
         this.startEmit()
       }).catch(err => {

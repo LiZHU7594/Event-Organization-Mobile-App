@@ -52,7 +52,7 @@ class Register extends Component{
                 clearTimeout(this.time);
               }
               this.timer = setTimeout(()=>{
-                this.props.navigation.navigate('Event')
+                this.props.navigation.navigate('Tab')
               },3000)
             }
 

@@ -23,7 +23,6 @@ class Login extends React.Component{
 
   componentDidMount(){
     this.listener = DeviceEventEmitter.addListener('changeLoginStatus', (message) => {
-      console.log(message)
       this.setState({showLoginPage:message.showLoginPage,showNotie:message.showNotie})
     })
   }
@@ -59,6 +58,7 @@ class Login extends React.Component{
               this.props.navigation.navigate('Tab')
               this.setState({showLoginPage:false, showNotie: true})
               this.setState({username: '', password: ''})
+              this.setState({ 'warningStatus': false,'userUnavailable': false });
             }else{
               this.setState(() => ({ 'userUnavailable': true }));
             }

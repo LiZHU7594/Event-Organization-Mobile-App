@@ -33,7 +33,6 @@ class EachCreation extends Component{
   };
 
   startEmit() {
-    console.log('changeActiveStatus')
     DeviceEventEmitter.emit('changeActiveStatus');
   };
 
