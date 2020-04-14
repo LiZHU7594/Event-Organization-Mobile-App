@@ -46,10 +46,12 @@ $ yarn android
 - [x] Register a new account in register page. After sucessfully register, the browser redirects to Event page.
 - [x] Logout. After logging out, the browser redirects to Login page.
 - [x] Search event by keyword, time, category and place in Event page, Participation page and Creation page. Correctly show events and the number of events. Specifically, unavailable events disappear in Participation Page after search.
-- [x] Create a new event in Event page or Creation page and show correct avaibale events after submitting.
-- [x] Join in event in Event page. After joining in, the button becomes "quit" and the user can see the event in participation page.
+- [x] Create a new event with necessary information in Event page or Creation page and show correct available events after submitting.
+- [x] Join in an event in Event page. After joining in, the button becomes "quit" and the user can see the event in participation page. The creator of this event can see this participator in Creation page.
+- [x] Quit an event in Event page. After quiting, the button becomes "join in" and the event disappears in participation page. The creator of this event can see this participator disappears in Creation page.
 - [x] Click More button on each event and show detail information. After sucessfully showing detail information, the button becomes Less. After clicking Less button, detail information was hidden.
 - [x] If the creator closes an event in creation page, this information about unavailable event will show in participator's Participation page. And this event disappears in Event page.
-- [x] In Creation page, creator can see expired event and participators.
+- [x] If the creator activates an event in creation page, this unavailable event becomes available in participators' Participation page. And this event appears in Event page.
+- [x] In Creation page, creator can see expired event and participators of his creations.
 
 > Here are three existing users: Joyce(password:joyce), David(password:david), James(password:james). You can create new account or use existing users to test by your self.
