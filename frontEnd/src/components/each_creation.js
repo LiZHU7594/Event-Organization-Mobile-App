@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text, Button, DeviceEventEmitter} from 'react-native';
 import axios from 'axios';
 
 class EachCreation extends Component{
@@ -27,7 +27,14 @@ class EachCreation extends Component{
     this.handleClickOperator=this.handleClickOperator.bind(this);
     this.handleSee=this.handleSee.bind(this);
     this.handleClose=this.handleClose.bind(this);
-    this.isAvailable=this.isAvailable.bind(this)
+    this.isAvailable=this.isAvailable.bind(this);
+    this.getData = this.getData.bind(this)
+    this.startEmit = this.startEmit.bind(this);
+  };
+
+  startEmit() {
+    console.log('changeActiveStatus')
+    DeviceEventEmitter.emit('changeActiveStatus');
   };
 
   isAvailable(){
@@ -46,6 +53,26 @@ class EachCreation extends Component{
   }
 
   componentDidMount() {
+    this.listener = DeviceEventEmitter.addListener('eventChangeJoin', () => {
+      this.getData();
+      this.forceUpdate();
+    })
+
+    this.listener = DeviceEventEmitter.addListener('participationChangeJoin', () => {
+      this.getData();
+      this.forceUpdate();
+    })
+
+    this.getData();
+  }
+
+  componentWillUnmount() {
+    if (this.listener) {
+      this.listener.remove();
+    }
+  }
+
+  getData(){
     const data = {
         'event_id': this.state.id
     };
@@ -105,6 +132,7 @@ class EachCreation extends Component{
       };
 
       axios.post("http://10.0.2.2:5001/close",data).then(res => {
+        this.startEmit()
       }).catch(err => {
           console.log(err);
       });
@@ -116,6 +144,7 @@ class EachCreation extends Component{
       };
 
       axios.post("http://10.0.2.2:5001/open",data).then(res => {
+        this.startEmit()
       }).catch(err => {
           console.log(err);
       });

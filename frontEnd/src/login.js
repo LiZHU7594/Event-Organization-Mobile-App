@@ -1,23 +1,38 @@
 import React,{ setState } from 'react';
-import {View, Text, TextInput, Button} from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {View, Text, TextInput, Button, DeviceEventEmitter} from 'react-native';
 import axios from 'axios';
 // import '../css/style.css'
 
 class Login extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            users: [],
-            username: '',
-            password: '',
-            warningStatus:false,
-            userUnavailable: false,
-        };
-        this.login = this.login.bind(this);
-        this.gotoRegister = this.gotoRegister.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+  constructor(props){
+      super(props);
+      this.state = {
+          users: [],
+          username: '',
+          password: '',
+          warningStatus:false,
+          userUnavailable: false,
+          showLoginPage: true, 
+          showNotie: false
+      };
+      this.login = this.login.bind(this);
+      this.gotoRegister = this.gotoRegister.bind(this);
+      this.handleChange = this.handleChange.bind(this);
+      this.goBack = this.goBack.bind(this);
+  }
+
+  componentDidMount(){
+    this.listener = DeviceEventEmitter.addListener('changeLoginStatus', (message) => {
+      console.log(message)
+      this.setState({showLoginPage:message.showLoginPage,showNotie:message.showNotie})
+    })
+  }
+
+  componentWillUnmount() {
+    if (this.listener) {
+      this.listener.remove();
     }
+  }
 
   login(event) {
       let usernameFilled = false;
@@ -41,8 +56,9 @@ class Login extends React.Component{
         };
         axios.post("http://10.0.2.2:5001/login",data).then(res => {
             if(res.data.status==='login success'){
-              this.props.navigation.navigate('Event')
-              this.setState({username: '', password: '',})
+              this.props.navigation.navigate('Tab')
+              this.setState({showLoginPage:false, showNotie: true})
+              this.setState({username: '', password: ''})
             }else{
               this.setState(() => ({ 'userUnavailable': true }));
             }
@@ -56,15 +72,23 @@ class Login extends React.Component{
 
     gotoRegister() {
         this.props.navigation.navigate('Register')
-        this.setState({username: '', password: '',})
+        this.forceUpdate();
    }
 
     handleChange(name, value) {
+      this.setState(() => ({ 'warningStatus': false }));
       this.setState(() => ({ [name]: value }));
     }
 
+  goBack(){
+    this.props.navigation.navigate('Tab')
+  }
+
     render(){
+      // console.log(this.props.route.params.showNotie)
       return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        { this.state.showLoginPage && (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Text style={{fontSize:35,fontWeight: 'bold'}}>Login</Text>
             <TextInput
@@ -99,7 +123,13 @@ class Login extends React.Component{
             <View style={{marginTop:5}}>
               <Button title="Register" onPress={this.gotoRegister}/>
             </View>
-          </View>
+          </View>)}
+        { this.state.showNotie && (
+          <View>
+          <Text style={{fontSize:25,fontWeight: 'bold'}}>You have already logged in</Text>
+          <Button title="GoBack" onPress={this.goBack}/>
+          </View>)}
+        </View>
       );
     }
 }

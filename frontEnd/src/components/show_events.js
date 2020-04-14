@@ -17,7 +17,6 @@ class ShowEvents extends Component{
       const data = {
           'eventList': props.eventList,
       };
-      console.log(data)
       axios.post("http://10.0.2.2:5001/show_event", data).then(res => {
           if(res.status===200){
             this.setState({'eventDetailList':res.data.data.eventDetailList})

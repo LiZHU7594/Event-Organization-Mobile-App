@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, Text, TextInput, Button, View} from 'react-native';
+import {ScrollView, Text, TextInput, Button, View, DeviceEventEmitter} from 'react-native';
 import axios from 'axios';
 import CreateEvent from './components/create_event.js'
 import SearchAndFliter from './components/search_and_filter.js'
@@ -17,28 +17,42 @@ class Creation extends Component{
       page: 'creation',
     };
     this.handleClick = this.handleClick.bind(this)
-    this.gotoEvent = this.gotoEvent.bind(this)
-    this.gotoParticipation = this.gotoParticipation.bind(this)
+    this.getData = this.getData.bind(this)
   };
 
   componentDidMount(){
-      axios.get("http://10.0.2.2:5001/creation").then(res => {
-          if(res.status===200){
-            if(res.data.data.eventNum<2){
-              const event_sentence = 'Here is ' + res.data.data.eventNum + " event."
-              this.setState({'eventNum':res.data.data.eventNum,
-                              'eventSentence':event_sentence,
-                              'eventList':res.data.data.eventList})
-            }else{
-              const event_sentence = 'Here are ' + res.data.data.eventNum + " events."
-              this.setState({'eventNum':res.data.data.eventNum,
-                              'eventSentence':event_sentence,
-                              'eventList':res.data.data.eventList})
-            }
+    this.listener = DeviceEventEmitter.addListener('createEvent', () => {
+      this.getData();
+      this.forceUpdate();
+    })
+
+    this.getData();
+  }
+
+  componentWillUnmount() {
+    if (this.listener) {
+      this.listener.remove();
+    }
+  }
+
+  getData(){
+    axios.get("http://10.0.2.2:5001/creation").then(res => {
+        if(res.status===200){
+          if(res.data.data.eventNum<2){
+            const event_sentence = 'Here is ' + res.data.data.eventNum + " event."
+            this.setState({'eventNum':res.data.data.eventNum,
+                            'eventSentence':event_sentence,
+                            'eventList':res.data.data.eventList})
+          }else{
+            const event_sentence = 'Here are ' + res.data.data.eventNum + " events."
+            this.setState({'eventNum':res.data.data.eventNum,
+                            'eventSentence':event_sentence,
+                            'eventList':res.data.data.eventList})
           }
-      }).catch(err => {
-          console.log(err);
-      });
+        }
+    }).catch(err => {
+        console.log(err);
+    });
   }
 
   handleClick(event){
@@ -71,33 +85,15 @@ class Creation extends Component{
     this.setState({ layerVisible: false })
   }
 
-  gotoEvent(){
-    this.props.navigation.navigate('Event')
-  }
-
-  gotoParticipation(){
-    this.props.navigation.navigate('Participation')
-  }
-
   render(){
     return (
     <ScrollView>
       <SearchAndFliter handleEventSearch={this.handleSearch.bind(this)} page={this.state.page}/>
         {this.state.buttonVisible &&(
-          <Button title="Create Event" onPress={this.handleClick} />
+          <Button title="Create Event" color="#ffd391" onPress={this.handleClick} />
         )}
       <CreateEvent eventNum={this.state.eventNum} visible={this.state.layerVisible}  handleCancel ={this.handleClickCancel.bind(this)} handleValue={this.handleGet.bind(this)} page={this.state.page}/>
       <Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>Your creations</Text>
-        <View style={{flexDirection:'row',marginLeft:10, marginBottom: 5,marginRight:10}}>
-          <View style={{marginLeft:50}}>
-            <Button 
-              title="gotoEvent" onPress={this.gotoEvent} />
-          </View>
-          <View style={{marginLeft:10}}>
-            <Button 
-              title="gotoParticipation" onPress={this.gotoParticipation} />
-          </View>
-        </View>
       <Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>{this.state.eventSentence}</Text>
       <ShowCreation eventList={this.state.eventList} />
     </ScrollView>

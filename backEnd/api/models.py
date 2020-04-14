@@ -29,7 +29,7 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(128), nullable=False)
     place = db.Column(db.String(128), nullable=False)
-    time = db.Column(db.Date, nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
     category = db.Column(db.String(128), nullable=False)
     detail = db.Column(db.String(1000))
     is_active = db.Column(db.Boolean, nullable=False)

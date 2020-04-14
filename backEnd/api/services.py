@@ -71,10 +71,10 @@ def look_for_event_by_name(name):
         return None
 
 def create_event(place, name, time, category, creator_id, detail, page, now_time):
-    events = Event.query.all()
     event = Event(place=place, name=name, time=time, category=category, creator_id=creator_id, detail=detail)
     session.add(event)
     session.commit()
+    events = Event.query.all()
     if page == 'event':
         unexpired_events = Event.query.filter(Event.time >= now_time).order_by(Event.time)
         events = Event.query.filter_by(is_active=True).all()

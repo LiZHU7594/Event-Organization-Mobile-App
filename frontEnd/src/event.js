@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, View, Text, TextInput, Button, BackHandler, Platform} from 'react-native';
+import {ScrollView, View, Text, TextInput, Button, BackHandler, Platform, ToastAndroid, DeviceEventEmitter} from 'react-native';
 import axios from 'axios';
 import CreateEvent from './components/create_event.js'
 import SearchAndFliter from './components/search_and_filter.js'
@@ -17,20 +17,34 @@ class Event extends Component{
       page: 'event',
     };
     this.handleClick = this.handleClick.bind(this)
-    this.gotoParicipation = this.gotoParicipation.bind(this)
-    this.gotoCreation = this.gotoCreation.bind(this)
+    this.getData = this.getData.bind(this)
   };
 
   componentDidMount(){
+    this.listener = DeviceEventEmitter.addListener('participationChangeJoin', () => {
+      this.getData();
+      this.forceUpdate();
+    })
 
-      if(Platform.OS === "android") {
-        BackHandler.addEventListener('hardwareBackPress', ()=>{
-          return false
-          // console.log(this.props.navigation.dangerouslyGetParent())
-          // // return this.handleBackAndroid(this.props.navigation);
-      });}
+    this.listener = DeviceEventEmitter.addListener('changeActiveStatus', () => {
+      this.getData();
+      this.forceUpdate();
+    })
+    
+    this.listener = DeviceEventEmitter.addListener('createEvent', () => {
+      this.getData();
+      this.forceUpdate();
+    })
 
-      axios.get("http://10.0.2.2:5001/events").then(res => {
+    this.getData();
+
+    // if(Platform.OS === "android") {
+    //   BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    // }
+  }
+
+  getData(){
+    axios.get("http://10.0.2.2:5001/events").then(res => {
           if(res.status===200){
             if(res.data.data.eventNum<2){
               const event_sentence = 'Here is ' + res.data.data.eventNum + " event."
@@ -49,9 +63,20 @@ class Event extends Component{
       });
   }
 
+  // componentWillUnmount() {
+  //   if(Platform.OS === "android") {
+  //     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  //   }
+  // }
+
+  // handleBackButton() {
+  //       console.log("here")
+  //       return true;
+  // }
+
   componentWillUnmount() {
-    if(Platform.OS === "android") {
-      BackHandler.removeEventListener('hardwareBackPress', ()=>{});
+    if (this.listener) {
+      this.listener.remove();
     }
   }
 
@@ -84,15 +109,6 @@ class Event extends Component{
     this.setState({ buttonVisible: true })
     this.setState({ layerVisible: false })
   }
-
-  gotoParicipation(){
-    this.props.navigation.navigate('Participation')
-  }
-
-  gotoCreation(){
-    this.props.navigation.navigate('Creation')
-  }
-
   render(){
   	return (
   		<ScrollView>
@@ -101,22 +117,12 @@ class Event extends Component{
           <View
           style={{marginLeft:10, marginBottom: 5,marginRight:10}}>
           <Button 
-          title="Create Event" onPress={this.handleClick} />
+          title="Create Event" color="#ffd391" onPress={this.handleClick} />
           </View>
         )}
         <CreateEvent eventNum={this.state.eventNum} visible={this.state.layerVisible}  handleCancel ={this.handleClickCancel.bind(this)} handleValue={this.handleGet.bind(this)} page={this.state.page}/>
   			<Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>Here is event page</Text>
-        <View style={{flexDirection:'row',marginLeft:10, marginBottom: 5,marginRight:10}}>
-          <View style={{marginLeft:50}}>
-            <Button 
-              title="gotoParicipation" onPress={this.gotoParicipation} />
-          </View>
-          <View style={{marginLeft:10}}>
-            <Button 
-              title="gotoCreation" onPress={this.gotoCreation} />
-          </View>
-        </View>
-  			<Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>{this.state.eventSentence}</Text>
+        <Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>{this.state.eventSentence}</Text>
         <ShowEvents eventList={this.state.eventList}/>
   		</ScrollView>
   		)

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {ScrollView, Text, TextInput, Button, View} from 'react-native';
+import {ScrollView, Text, TextInput, Button, View, DeviceEventEmitter} from 'react-native';
 import axios from 'axios';
 import SearchAndFliter from './components/search_and_filter.js'
 import ShowParticipation from './components/show_participations.js'
 import ShowUnavailableParticipation from './components/show_unavailable_participation.js'
+import Logout from './logout';
 
 class Participation extends Component{
   constructor(props) {
@@ -18,30 +19,48 @@ class Participation extends Component{
       page: 'participation',
     };
     this.handleClick = this.handleClick.bind(this)
-    this.gotoEvent = this.gotoEvent.bind(this)
-    this.gotoCreation = this.gotoCreation.bind(this)
+    this.getData = this.getData.bind(this)
   };
 
   componentDidMount(){
-      axios.get("http://10.0.2.2:5001/participation").then(res => {
-          if(res.status===200){
-            if(res.data.data.eventNum<2){
-              const event_sentence = 'Here is ' + res.data.data.eventNum + " available event."
-              this.setState({'eventNum':res.data.data.eventNum,
-                              'eventSentence':event_sentence,
-                              'eventList':res.data.data.eventList,
-                              'eventListUnavailable':res.data.data.eventListUnavailable})
-            }else{
-              const event_sentence = 'Here are ' + res.data.data.eventNum + " available events."
-              this.setState({'eventNum':res.data.data.eventNum,
-                              'eventSentence':event_sentence,
-                              'eventList':res.data.data.eventList,
-                              'eventListUnavailable':res.data.data.eventListUnavailable})
-            }
+      this.listener = DeviceEventEmitter.addListener('eventChangeJoin', () => {
+      this.getData();
+      this.forceUpdate();
+    })
+      this.listener = DeviceEventEmitter.addListener('changeActiveStatus', () => {
+      this.getData();
+      this.forceUpdate();
+    })
+
+    this.getData();
+  }
+
+  componentWillUnmount() {
+    if (this.listener) {
+      this.listener.remove();
+    }
+  }
+
+  getData(){
+    axios.get("http://10.0.2.2:5001/participation").then(res => {
+        if(res.status===200){
+          if(res.data.data.eventNum<2){
+            const event_sentence = 'Here is ' + res.data.data.eventNum + " available event."
+            this.setState({'eventNum':res.data.data.eventNum,
+                            'eventSentence':event_sentence,
+                            'eventList':res.data.data.eventList,
+                            'eventListUnavailable':res.data.data.eventListUnavailable})
+          }else{
+            const event_sentence = 'Here are ' + res.data.data.eventNum + " available events."
+            this.setState({'eventNum':res.data.data.eventNum,
+                            'eventSentence':event_sentence,
+                            'eventList':res.data.data.eventList,
+                            'eventListUnavailable':res.data.data.eventListUnavailable})
           }
-      }).catch(err => {
-          console.log(err);
-      });
+        }
+    }).catch(err => {
+        console.log(err);
+    });
   }
 
   handleClick(event){
@@ -97,30 +116,12 @@ class Participation extends Component{
 
   }
 
-  gotoEvent(){
-    this.props.navigation.navigate('Event')
-  }
-
-  gotoCreation(){
-    this.props.navigation.navigate('Creation')
-  }
-
   render(){
   	return (
   		<ScrollView>
         <SearchAndFliter handleEventSearch={this.handleSearch.bind(this)} page={this.state.page}/>
   			<Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>Your participations</Text>
-        <View style={{flexDirection:'row',marginLeft:10, marginBottom: 5,marginRight:10}}>
-          <View style={{marginLeft:50}}>
-            <Button 
-              title="gotoEvent" onPress={this.gotoEvent} />
-          </View>
-          <View style={{marginLeft:10}}>
-            <Button 
-              title="gotoCreation" onPress={this.gotoCreation} />
-          </View>
-        </View>
-  			<Text style={{fontSize:35,fontWeight: 'bold',textAlign: 'center'}}>{this.state.eventSentence}</Text>
+        <Text style={{fontSize:25,fontWeight: 'bold',textAlign: 'center'}}>{this.state.eventSentence}</Text>
         <ShowParticipation eventList={this.state.eventList} refresh={this.refresh.bind(this)}/>
         <ShowUnavailableParticipation eventList={this.state.eventListUnavailable}/>
   		</ScrollView>

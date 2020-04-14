@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {View, Text, Button} from 'react-native';
+import {View, Text, Button, DeviceEventEmitter} from 'react-native';
 
 class EachEvent extends Component{
   constructor(props) {
@@ -24,6 +24,11 @@ class EachEvent extends Component{
     this.handleLess=this.handleLess.bind(this);
     this.handleClickJoin=this.handleClickJoin.bind(this);
     this.isAvailable=this.isAvailable.bind(this)
+    this.startEmit = this.startEmit.bind(this);
+  };
+
+  startEmit() {
+    DeviceEventEmitter.emit('eventChangeJoin');
   };
 
   isAvailable(){
@@ -97,6 +102,7 @@ class EachEvent extends Component{
 
       axios.post("http://10.0.2.2:5001/join",data).then(res => {
           this.setState({participatorNum:res.data.data.length})
+          this.startEmit()
       }).catch(err => {
           console.log(err);
       });
@@ -109,6 +115,7 @@ class EachEvent extends Component{
 
       axios.post("http://10.0.2.2:5001/quit",data).then(res => {
           this.setState({participatorNum:res.data.data.length})
+          this.startEmit()
       }).catch(err => {
           console.log(err);
       });

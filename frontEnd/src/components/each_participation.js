@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text, Button, DeviceEventEmitter} from 'react-native';
 import axios from 'axios';
 
 class EachParticipation extends Component{
@@ -24,7 +24,12 @@ class EachParticipation extends Component{
     this.handleMore=this.handleMore.bind(this);
     this.handleLess=this.handleLess.bind(this);
     this.handleClickJoin=this.handleClickJoin.bind(this);
-    this.isAvailable=this.isAvailable.bind(this)
+    this.isAvailable=this.isAvailable.bind(this);
+    this.startEmit = this.startEmit.bind(this);
+  };
+
+  startEmit() {
+    DeviceEventEmitter.emit('participationChangeJoin');
   };
 
   isAvailable(){
@@ -98,8 +103,9 @@ class EachParticipation extends Component{
       const data = {
         'event_id': this.state.id
       };
-
-      axios.post("http://10.0.2.2:5001:5001/join",data).then(res => {
+      console.log(data)
+      axios.post("http://10.0.2.2:5001/join",data).then(res => {
+        this.startEmit()
       }).catch(err => {
           console.log(err);
       });
@@ -110,7 +116,8 @@ class EachParticipation extends Component{
         'event_id': this.state.id
       };
 
-      axios.post("http://10.0.2.2:5001:5001/quit",data).then(res => {
+      axios.post("http://10.0.2.2:5001/quit",data).then(res => {
+        this.startEmit()
           this.props.refresh();
       }).catch(err => {
           console.log(err);
