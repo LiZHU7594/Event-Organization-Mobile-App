@@ -1,4 +1,4 @@
-# event1
+# Event Organization Android App
 
 #### This project built an Android APP by Python Flask and React Native, where users can create and join in events.
 
